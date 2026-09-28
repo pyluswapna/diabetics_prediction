@@ -27,7 +27,7 @@ st.markdown(
 
     /* Main background */
     .stApp {
-        background: #f7f9fc;
+        background-color: #f7f9fc;
     }
 
     /* Main title */
@@ -38,56 +38,33 @@ st.markdown(
         margin-bottom: 5px;
     }
 
+    /* Subtitle */
     .subtitle {
         font-size: 17px;
         color: #667085;
         margin-bottom: 25px;
     }
 
-    /* Cards */
+    /* Information cards */
     .info-card {
-        background: white;
-        padding: 22px;
+        background-color: white;
+        padding: 20px;
         border-radius: 15px;
         border: 1px solid #e5e7eb;
-        box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
         margin-bottom: 15px;
     }
 
     .card-title {
-        font-size: 20px;
+        font-size: 19px;
         font-weight: 650;
         color: #17324d;
-        margin-bottom: 8px;
+        margin-bottom: 7px;
     }
 
     .card-text {
         color: #667085;
         font-size: 15px;
-    }
-
-    /* Prediction card */
-    .prediction-card {
-        background: white;
-        padding: 30px;
-        border-radius: 18px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0px 6px 20px rgba(0,0,0,0.07);
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .prediction-title {
-        font-size: 25px;
-        font-weight: 700;
-        color: #17324d;
-    }
-
-    .prediction-value {
-        font-size: 32px;
-        font-weight: 750;
-        margin-top: 10px;
     }
 
     /* Section heading */
@@ -99,19 +76,22 @@ st.markdown(
         margin-bottom: 12px;
     }
 
-    /* Footer */
-    .footer {
+    /* Prediction card */
+    .prediction-card {
+        background-color: white;
+        padding: 30px;
+        border-radius: 18px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.07);
         text-align: center;
-        color: #667085;
-        font-size: 14px;
-        padding: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     /* Button */
-    div.stButton > button,
-    div[data-testid="stFormSubmitButton"] button {
+    div.stFormSubmitButton > button {
         border-radius: 10px;
-        height: 50px;
+        height: 52px;
         font-size: 17px;
         font-weight: 600;
     }
@@ -147,8 +127,8 @@ except FileNotFoundError:
 
     st.error(
         "❌ Model file not found. "
-        "Please keep diabetic_prediction_pipeline_1.pkl "
-        "in the same folder as app_5.py."
+        "Please keep `diabetic_prediction_pipeline_1.pkl` "
+        "in the same folder as `app_5.py`."
     )
 
     st.stop()
@@ -170,37 +150,40 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.markdown(
-        """
-        ### 📌 Project
-
-        **Diabetes Prediction using Machine Learning**
-
-        This application uses a trained **XGBoost** model
-        to estimate the probability of diabetes from the
-        entered information.
-        """
-    )
-
-    st.markdown("---")
-
     st.markdown("### 🤖 Model")
 
     st.success("XGBoost")
 
-    st.markdown("### 🔧 Pipeline")
+    st.markdown("### 📊 Problem")
 
-    st.write("✓ Data preprocessing")
-    st.write("✓ Feature encoding")
-    st.write("✓ Feature scaling")
+    st.write("Binary Classification")
+
+    st.markdown("### 🎯 Prediction")
+
+    st.write("Diabetes / No Diabetes")
+
+    st.markdown("### ⚙️ Techniques")
+
+    st.write("✓ Data Preprocessing")
+    st.write("✓ One-Hot Encoding")
+    st.write("✓ Feature Scaling")
     st.write("✓ SMOTE")
-    st.write("✓ XGBoost prediction")
+    st.write("✓ XGBoost")
 
     st.markdown("---")
 
-    
+    st.markdown("### 📈 Test Performance")
+
+    st.write("Accuracy: **96.85%**")
+    st.write("Precision: **88.27%**")
+    st.write("Recall: **74.12%**")
+    st.write("F1-Score: **80.58%**")
+    st.write("ROC-AUC: **0.9791**")
+    st.write("PR-AUC: **0.8887**")
+
+
 # =========================================================
-# HEADER
+# MAIN HEADER
 # =========================================================
 
 st.markdown(
@@ -210,14 +193,14 @@ st.markdown(
 
 st.markdown(
     '<div class="subtitle">'
-    'Machine Learning powered diabetes risk prediction dashboard'
+    'Machine Learning powered diabetes prediction dashboard'
     '</div>',
     unsafe_allow_html=True
 )
 
 
 # =========================================================
-# TOP INFORMATION CARDS
+# TOP CARDS
 # =========================================================
 
 col1, col2, col3, col4 = st.columns(4)
@@ -228,8 +211,15 @@ with col1:
     st.markdown(
         """
         <div class="info-card">
-            <div class="card-title">🤖 Model</div>
-            <div class="card-text">XGBoost Classifier</div>
+
+            <div class="card-title">
+                🤖 Model
+            </div>
+
+            <div class="card-text">
+                XGBoost Classifier
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -241,8 +231,15 @@ with col2:
     st.markdown(
         """
         <div class="info-card">
-            <div class="card-title">📊 Problem</div>
-            <div class="card-text">Binary Classification</div>
+
+            <div class="card-title">
+                📊 Problem
+            </div>
+
+            <div class="card-text">
+                Binary Classification
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -254,8 +251,15 @@ with col3:
     st.markdown(
         """
         <div class="info-card">
-            <div class="card-title">🎯 Target</div>
-            <div class="card-text">Diabetes Prediction</div>
+
+            <div class="card-title">
+                🎯 Target
+            </div>
+
+            <div class="card-text">
+                Diabetes Prediction
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -267,8 +271,15 @@ with col4:
     st.markdown(
         """
         <div class="info-card">
-            <div class="card-title">⚙️ Technique</div>
-            <div class="card-text">SMOTE + ML Pipeline</div>
+
+            <div class="card-title">
+                ⚙️ Technique
+            </div>
+
+            <div class="card-text">
+                SMOTE + ML Pipeline
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -285,16 +296,15 @@ st.markdown(
 )
 
 st.write(
-    "Please enter the information below and click "
-    "**Predict Diabetes**."
+    "Enter the details below and click **Predict Diabetes**."
 )
 
 
-with st.form("diabetes_form"):
+with st.form("diabetes_prediction_form"):
 
-    # -----------------------------------------------------
+    # =====================================================
     # PERSONAL INFORMATION
-    # -----------------------------------------------------
+    # =====================================================
 
     st.markdown("### 👤 Personal Information")
 
@@ -332,9 +342,9 @@ with st.form("diabetes_form"):
         )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # HEALTH INFORMATION
-    # -----------------------------------------------------
+    # =====================================================
 
     st.markdown("### ❤️ Health Information")
 
@@ -379,9 +389,9 @@ with st.form("diabetes_form"):
         )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # BLOOD GLUCOSE
-    # -----------------------------------------------------
+    # =====================================================
 
     st.markdown("### 🩸 Blood Glucose")
 
@@ -397,9 +407,9 @@ with st.form("diabetes_form"):
     st.markdown("")
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # PREDICT BUTTON
-    # -----------------------------------------------------
+    # =====================================================
 
     submitted = st.form_submit_button(
         "🔍 Predict Diabetes",
@@ -413,7 +423,10 @@ with st.form("diabetes_form"):
 
 if submitted:
 
-    # Create dataframe
+    # -----------------------------------------------------
+    # CREATE INPUT DATAFRAME
+    # -----------------------------------------------------
+
     new_data = pd.DataFrame(
         [{
             "gender": gender,
@@ -434,13 +447,8 @@ if submitted:
         # MODEL PREDICTION
         # -------------------------------------------------
 
-            try:
-
-        # -------------------------------------------------
-        # MODEL PREDICTION
-        # -------------------------------------------------
-
         prediction = model.predict(new_data)[0]
+
 
         # -------------------------------------------------
         # PROBABILITY
@@ -448,17 +456,28 @@ if submitted:
 
         if hasattr(model, "predict_proba"):
 
-            probability = model.predict_proba(new_data)[0, 1]
+            probability = model.predict_proba(
+                new_data
+            )[0, 1]
 
         else:
 
             probability = None
 
-        # -------------------------------------------------
-        # PREDICTION RESULT
-        # -------------------------------------------------
 
-        st.markdown("### 📊 Prediction Result")
+        # =================================================
+        # RESULT
+        # =================================================
+
+        st.markdown(
+            '<div class="section-heading">📊 Prediction Result</div>',
+            unsafe_allow_html=True
+        )
+
+
+        # -------------------------------------------------
+        # DIABETES RESULT
+        # -------------------------------------------------
 
         if prediction == 1:
 
@@ -466,18 +485,31 @@ if submitted:
                 """
                 <div style="
                     background-color:#ffe5e5;
-                    padding:25px;
-                    border-radius:15px;
+                    padding:28px;
+                    border-radius:18px;
                     text-align:center;
                     border:2px solid #ff4b4b;
                 ">
-                    <h1 style="color:#d00000; margin:0;">
+
+                    <h1 style="
+                        color:#d00000;
+                        margin:0;
+                        font-size:34px;
+                    ">
+
                         🔴 DIABETES
+
                     </h1>
+
                 </div>
                 """,
                 unsafe_allow_html=True
             )
+
+
+        # -------------------------------------------------
+        # NO DIABETES RESULT
+        # -------------------------------------------------
 
         else:
 
@@ -485,22 +517,31 @@ if submitted:
                 """
                 <div style="
                     background-color:#e8f7ee;
-                    padding:25px;
-                    border-radius:15px;
+                    padding:28px;
+                    border-radius:18px;
                     text-align:center;
                     border:2px solid #28a745;
                 ">
-                    <h1 style="color:#16833a; margin:0;">
+
+                    <h1 style="
+                        color:#16833a;
+                        margin:0;
+                        font-size:34px;
+                    ">
+
                         🟢 NO DIABETES
+
                     </h1>
+
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-        # -------------------------------------------------
+
+        # =================================================
         # PROBABILITY
-        # -------------------------------------------------
+        # =================================================
 
         if probability is not None:
 
@@ -515,32 +556,45 @@ if submitted:
                     f"{probability:.2%}"
                 )
 
-                st.progress(float(probability))
+                st.progress(
+                    float(probability)
+                )
 
-        # -------------------------------------------------
+
+        # =================================================
         # INPUT SUMMARY
-        # -------------------------------------------------
+        # =================================================
 
         st.markdown("### 📋 Entered Information")
 
         summary_col1, summary_col2 = st.columns(2)
 
+
         with summary_col1:
 
-            st.write(f"👤 **Gender:** {gender}")
-
-            st.write(f"🎂 **Age:** {age:.0f}")
-
             st.write(
-                f"🚬 **Smoking History:** {smoking_history}"
+                f"👤 **Gender:** {gender}"
             )
 
-            st.write(f"⚖️ **BMI:** {bmi:.2f}")
+            st.write(
+                f"🎂 **Age:** {age:.0f}"
+            )
+
+            st.write(
+                f"🚬 **Smoking History:** "
+                f"{smoking_history}"
+            )
+
+            st.write(
+                f"⚖️ **BMI:** {bmi:.2f}"
+            )
+
 
         with summary_col2:
 
             st.write(
-                f"🩸 **HbA1c Level:** {hba1c_level:.1f}"
+                f"🩸 **HbA1c Level:** "
+                f"{hba1c_level:.1f}"
             )
 
             st.write(
@@ -558,9 +612,10 @@ if submitted:
                 f"{'Yes' if heart_disease == 1 else 'No'}"
             )
 
-        # -------------------------------------------------
+
+        # =================================================
         # MODEL INPUT DATA
-        # -------------------------------------------------
+        # =================================================
 
         with st.expander("🔎 View Model Input Data"):
 
@@ -569,12 +624,13 @@ if submitted:
                 use_container_width=True
             )
 
+
+    # =====================================================
+    # ERROR HANDLING
+    # =====================================================
+
     except Exception as e:
 
         st.error(
             f"❌ Prediction failed: {e}"
         )
-
-
-
-        
