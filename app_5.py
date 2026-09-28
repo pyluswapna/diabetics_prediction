@@ -434,8 +434,13 @@ if submitted:
         # MODEL PREDICTION
         # -------------------------------------------------
 
-        prediction = model.predict(new_data)[0]
+            try:
 
+        # -------------------------------------------------
+        # MODEL PREDICTION
+        # -------------------------------------------------
+
+        prediction = model.predict(new_data)[0]
 
         # -------------------------------------------------
         # PROBABILITY
@@ -443,53 +448,74 @@ if submitted:
 
         if hasattr(model, "predict_proba"):
 
-            probability = model.predict_proba(
-                new_data
-            )[0, 1]
+            probability = model.predict_proba(new_data)[0, 1]
 
         else:
 
             probability = None
 
-
         # -------------------------------------------------
-        # RESULT SECTION
+        # PREDICTION RESULT
         # -------------------------------------------------
 
         st.markdown("### 📊 Prediction Result")
 
-if prediction == 1:
+        if prediction == 1:
 
-    st.error("🔴 DIABETES")
+            st.markdown(
+                """
+                <div style="
+                    background-color:#ffe5e5;
+                    padding:25px;
+                    border-radius:15px;
+                    text-align:center;
+                    border:2px solid #ff4b4b;
+                ">
+                    <h1 style="color:#d00000; margin:0;">
+                        🔴 DIABETES
+                    </h1>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-else:
+        else:
 
-    st.success("🟢 NO DIABETES")
-
+            st.markdown(
+                """
+                <div style="
+                    background-color:#e8f7ee;
+                    padding:25px;
+                    border-radius:15px;
+                    text-align:center;
+                    border:2px solid #28a745;
+                ">
+                    <h1 style="color:#16833a; margin:0;">
+                        🟢 NO DIABETES
+                    </h1>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
         # -------------------------------------------------
-        # PROBABILITY DISPLAY
+        # PROBABILITY
         # -------------------------------------------------
 
         if probability is not None:
 
-            st.markdown(
-                "### 🎯 Predicted Diabetes Probability"
-            )
+            st.markdown("### 🎯 Diabetes Probability")
 
             col1, col2, col3 = st.columns([1, 2, 1])
 
             with col2:
 
                 st.metric(
-                    "Diabetes Probability",
+                    "Probability",
                     f"{probability:.2%}"
                 )
 
-                st.progress(
-                    float(probability)
-                )
-
+                st.progress(float(probability))
 
         # -------------------------------------------------
         # INPUT SUMMARY
@@ -499,25 +525,17 @@ else:
 
         summary_col1, summary_col2 = st.columns(2)
 
-
         with summary_col1:
 
-            st.write(
-                f"👤 **Gender:** {gender}"
-            )
+            st.write(f"👤 **Gender:** {gender}")
 
-            st.write(
-                f"🎂 **Age:** {age:.0f}"
-            )
+            st.write(f"🎂 **Age:** {age:.0f}")
 
             st.write(
                 f"🚬 **Smoking History:** {smoking_history}"
             )
 
-            st.write(
-                f"⚖️ **BMI:** {bmi:.2f}"
-            )
-
+            st.write(f"⚖️ **BMI:** {bmi:.2f}")
 
         with summary_col2:
 
@@ -540,9 +558,8 @@ else:
                 f"{'Yes' if heart_disease == 1 else 'No'}"
             )
 
-
         # -------------------------------------------------
-        # TECHNICAL DETAILS
+        # MODEL INPUT DATA
         # -------------------------------------------------
 
         with st.expander("🔎 View Model Input Data"):
@@ -552,7 +569,6 @@ else:
                 use_container_width=True
             )
 
-
     except Exception as e:
 
         st.error(
@@ -561,3 +577,4 @@ else:
 
 
 
+        
