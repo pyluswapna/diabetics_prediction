@@ -1,250 +1,724 @@
+
 import streamlit as st
 import pandas as pd
 import joblib
-import time
-import warnings
+from pathlib import Path
 
-warnings.filterwarnings("ignore")
 
-# ─────────────────────────────────────────────────────────────
-# Page Config
-# ─────────────────────────────────────────────────────────────
+# =========================================================
+# PAGE CONFIGURATION
+# =========================================================
+
 st.set_page_config(
-    page_title="Diabetes Prediction",
+    page_title="Diabetes Prediction AI",
     page_icon="🩺",
-    layout="centered"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# ─────────────────────────────────────────────────────────────
-# Load Saved Files
-# ─────────────────────────────────────────────────────────────
-@st.cache_resource
-def load_artifacts():
-    artifacts = joblib.load("diabetic_prediction_pipeline_1.pkl")
 
-    return (
-        artifacts["model"],
-        artifacts["cat_encod"],
-        artifacts["num_encod"]
+# =========================================================
+# CUSTOM CSS
+# =========================================================
+
+st.markdown(
+    """
+    <style>
+
+    /* Main background */
+    .stApp {
+        background: #f7f9fc;
+    }
+
+    /* Main title */
+    .main-title {
+        font-size: 42px;
+        font-weight: 700;
+        color: #17324d;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        font-size: 17px;
+        color: #667085;
+        margin-bottom: 25px;
+    }
+
+    /* Cards */
+    .info-card {
+        background: white;
+        padding: 22px;
+        border-radius: 15px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: 650;
+        color: #17324d;
+        margin-bottom: 8px;
+    }
+
+    .card-text {
+        color: #667085;
+        font-size: 15px;
+    }
+
+    /* Prediction card */
+    .prediction-card {
+        background: white;
+        padding: 30px;
+        border-radius: 18px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0px 6px 20px rgba(0,0,0,0.07);
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .prediction-title {
+        font-size: 25px;
+        font-weight: 700;
+        color: #17324d;
+    }
+
+    .prediction-value {
+        font-size: 32px;
+        font-weight: 750;
+        margin-top: 10px;
+    }
+
+    /* Section heading */
+    .section-heading {
+        font-size: 25px;
+        font-weight: 700;
+        color: #17324d;
+        margin-top: 20px;
+        margin-bottom: 12px;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        color: #667085;
+        font-size: 14px;
+        padding: 25px;
+    }
+
+    /* Button */
+    div.stButton > button,
+    div[data-testid="stFormSubmitButton"] button {
+        border-radius: 10px;
+        height: 50px;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# MODEL PATH
+# =========================================================
+
+MODEL_PATH = Path(__file__).parent / "diabetic_prediction_pipeline_1.pkl"
+
+
+# =========================================================
+# LOAD MODEL
+# =========================================================
+
+@st.cache_resource
+def load_model():
+
+    return joblib.load(MODEL_PATH)
+
+
+try:
+
+    model = load_model()
+
+except FileNotFoundError:
+
+    st.error(
+        "❌ Model file not found. "
+        "Please keep diabetic_prediction_pipeline_1.pkl "
+        "in the same folder as app_5.py."
     )
 
-model, cat_encod, num_encod = load_artifacts()
+    st.stop()
 
-# Numerical columns
-NUM_COLS = ["bmi", "HbA1c_level", "blood_glucose_level"]
+except Exception as e:
 
-# Categorical columns
-CAT_COLS = ["gender", "smoking_history"]
+    st.error(f"❌ Unable to load the model: {e}")
 
-# ─────────────────────────────────────────────────────────────
-# Styling
-# ─────────────────────────────────────────────────────────────
-st.markdown("""
-<style>
-.main {
-    background-color: #f4f6f9;
-}
+    st.stop()
 
-.stButton>button {
-    background-color: #0d6efd;
-    color: white;
-    border-radius: 10px;
-    height: 3em;
-    width: 100%;
-    font-size: 18px;
-}
 
-.stButton>button:hover {
-    background-color: #0b5ed7;
-}
-</style>
-""", unsafe_allow_html=True)
+# =========================================================
+# SIDEBAR
+# =========================================================
 
-# ─────────────────────────────────────────────────────────────
-# Header
-# ─────────────────────────────────────────────────────────────
-st.title("🩺 Diabetes Prediction System")
+with st.sidebar:
 
-st.write(
-    "Enter patient health details to predict diabetes."
+    st.markdown("## 🩺 Diabetes AI")
+
+    st.markdown("---")
+
+    st.markdown(
+        """
+        ### 📌 Project
+
+        **Diabetes Prediction using Machine Learning**
+
+        This application uses a trained **XGBoost** model
+        to estimate the probability of diabetes from the
+        entered information.
+        """
+    )
+
+    st.markdown("---")
+
+    st.markdown("### 🤖 Model")
+
+    st.success("XGBoost")
+
+    st.markdown("### 🔧 Pipeline")
+
+    st.write("✓ Data preprocessing")
+    st.write("✓ Feature encoding")
+    st.write("✓ Feature scaling")
+    st.write("✓ SMOTE")
+    st.write("✓ XGBoost prediction")
+
+    st.markdown("---")
+
+    st.markdown(
+        """
+        ### 👩‍💻 Developer
+
+        **Pylu Swapna**
+
+        BSc Graduate
+
+        Machine Learning Portfolio Project
+        """
+    )
+
+
+# =========================================================
+# HEADER
+# =========================================================
+
+st.markdown(
+    '<div class="main-title">🩺 Diabetes Prediction AI</div>',
+    unsafe_allow_html=True
 )
 
-st.divider()
+st.markdown(
+    '<div class="subtitle">'
+    'Machine Learning powered diabetes risk prediction dashboard'
+    '</div>',
+    unsafe_allow_html=True
+)
 
-# ─────────────────────────────────────────────────────────────
-# Form
-# ─────────────────────────────────────────────────────────────
+
+# =========================================================
+# TOP INFORMATION CARDS
+# =========================================================
+
+col1, col2, col3, col4 = st.columns(4)
+
+
+with col1:
+
+    st.markdown(
+        """
+        <div class="info-card">
+            <div class="card-title">🤖 Model</div>
+            <div class="card-text">XGBoost Classifier</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+with col2:
+
+    st.markdown(
+        """
+        <div class="info-card">
+            <div class="card-title">📊 Problem</div>
+            <div class="card-text">Binary Classification</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+with col3:
+
+    st.markdown(
+        """
+        <div class="info-card">
+            <div class="card-title">🎯 Target</div>
+            <div class="card-text">Diabetes Prediction</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+with col4:
+
+    st.markdown(
+        """
+        <div class="info-card">
+            <div class="card-title">⚙️ Technique</div>
+            <div class="card-text">SMOTE + ML Pipeline</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# =========================================================
+# INPUT SECTION
+# =========================================================
+
+st.markdown(
+    '<div class="section-heading">👤 Enter Health Information</div>',
+    unsafe_allow_html=True
+)
+
+st.write(
+    "Please enter the information below and click "
+    "**Predict Diabetes**."
+)
+
+
 with st.form("diabetes_form"):
 
-    st.subheader("👤 Patient Information")
+    # -----------------------------------------------------
+    # PERSONAL INFORMATION
+    # -----------------------------------------------------
 
-    col1, col2 = st.columns(2)
+    st.markdown("### 👤 Personal Information")
+
+    col1, col2, col3 = st.columns(3)
 
     with col1:
 
         gender = st.selectbox(
             "Gender",
-            ["Male", "Female", "Other"]
+            ["Female", "Male", "Other"]
         )
+
+    with col2:
+
+        age = st.number_input(
+            "Age",
+            min_value=0.0,
+            max_value=120.0,
+            value=54.0,
+            step=1.0
+        )
+
+    with col3:
 
         smoking_history = st.selectbox(
             "Smoking History",
-            ["never", "former", "current", "not current", "ever", "No Info"]
+            [
+                "never",
+                "No Info",
+                "current",
+                "former",
+                "ever",
+                "not current"
+            ]
         )
+
+
+    # -----------------------------------------------------
+    # HEALTH INFORMATION
+    # -----------------------------------------------------
+
+    st.markdown("### ❤️ Health Information")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
 
         hypertension = st.selectbox(
             "Hypertension",
-            ["No", "Yes"]
+            [0, 1],
+            format_func=lambda x:
+                "No" if x == 0 else "Yes"
         )
 
     with col2:
 
         heart_disease = st.selectbox(
             "Heart Disease",
-            ["No", "Yes"]
+            [0, 1],
+            format_func=lambda x:
+                "No" if x == 0 else "Yes"
         )
+
+    with col3:
 
         bmi = st.number_input(
             "BMI",
-            min_value=10.0,
-            max_value=70.0,
-            value=22.5
+            min_value=0.0,
+            max_value=100.0,
+            value=27.32,
+            step=0.01
         )
 
-        hba1c = st.number_input(
+    with col4:
+
+        hba1c_level = st.number_input(
             "HbA1c Level",
-            min_value=3.0,
-            max_value=15.0,
-            value=5.5
+            min_value=0.0,
+            max_value=20.0,
+            value=6.6,
+            step=0.1
         )
 
-    blood_glucose = st.number_input(
+
+    # -----------------------------------------------------
+    # BLOOD GLUCOSE
+    # -----------------------------------------------------
+
+    st.markdown("### 🩸 Blood Glucose")
+
+    blood_glucose_level = st.number_input(
         "Blood Glucose Level",
-        min_value=50,
-        max_value=400,
-        value=120
+        min_value=0.0,
+        max_value=1000.0,
+        value=140.0,
+        step=1.0
     )
+
+
+    st.markdown("")
+
+
+    # -----------------------------------------------------
+    # PREDICT BUTTON
+    # -----------------------------------------------------
 
     submitted = st.form_submit_button(
-        "Predict Diabetes"
+        "🔍 Predict Diabetes",
+        use_container_width=True
     )
 
-# ─────────────────────────────────────────────────────────────
-# Prediction
-# ─────────────────────────────────────────────────────────────
+
+# =========================================================
+# PREDICTION
+# =========================================================
+
 if submitted:
 
-    with st.spinner("Analyzing patient data..."):
-        time.sleep(2)
-
-    # ---------------------------------------------------------
-    # Numerical Data Scaling
-    # ---------------------------------------------------------
-    num_df = pd.DataFrame(
-        [[bmi, hba1c, blood_glucose]],
-        columns=NUM_COLS
+    # Create dataframe
+    new_data = pd.DataFrame(
+        [{
+            "gender": gender,
+            "age": age,
+            "hypertension": hypertension,
+            "heart_disease": heart_disease,
+            "smoking_history": smoking_history,
+            "bmi": bmi,
+            "HbA1c_level": hba1c_level,
+            "blood_glucose_level": blood_glucose_level
+        }]
     )
 
-    num_scaled = pd.DataFrame(
-        num_encod.transform(num_df),
-        columns=NUM_COLS
-    )
 
-    # ---------------------------------------------------------
-    # Categorical Encoding
-    # ---------------------------------------------------------
-    known = {
-        col: list(cats)
-        for col, cats in zip(CAT_COLS, cat_encod.categories_)
-    }
+    try:
 
-    def safe(col, val):
-        return val if val in known[col] else known[col][0]
+        # -------------------------------------------------
+        # MODEL PREDICTION
+        # -------------------------------------------------
 
-    cat_df_raw = pd.DataFrame(
-        [[
-            safe("gender", gender),
-            safe("smoking_history", smoking_history)
-        ]],
-        columns=CAT_COLS
-    )
+        prediction = model.predict(new_data)[0]
 
-    cat_encoded = cat_encod.transform(cat_df_raw)
 
-    if hasattr(cat_encoded, "toarray"):
-        cat_encoded = cat_encoded.toarray()
+        # -------------------------------------------------
+        # PROBABILITY
+        # -------------------------------------------------
 
-    cat_df = pd.DataFrame(
-        cat_encoded,
-        columns=cat_encod.get_feature_names_out(CAT_COLS)
-    )
+        if hasattr(model, "predict_proba"):
 
-    # ---------------------------------------------------------
-    # No Transformation Columns
-    # ---------------------------------------------------------
-    extra_df = pd.DataFrame(
-        [[
-            1 if hypertension == "Yes" else 0,
-            1 if heart_disease == "Yes" else 0
-        ]],
-        columns=["hypertension", "heart_disease"]
-    )
+            probability = model.predict_proba(
+                new_data
+            )[0, 1]
 
-    # ---------------------------------------------------------
-    # Final DataFrame
-    # ---------------------------------------------------------
-    full_df = pd.concat(
-        [num_scaled, cat_df, extra_df],
-        axis=1
-    )
+        else:
 
-    # Match exact model column order
-    expected = list(model.feature_names_in_)
+            probability = None
 
-    for col in expected:
-        if col not in full_df.columns:
-            full_df[col] = 0
 
-    full_df = full_df[expected]
+        # -------------------------------------------------
+        # RESULT SECTION
+        # -------------------------------------------------
 
-    # ---------------------------------------------------------
-    # Prediction
-    # ---------------------------------------------------------
-    prediction = model.predict(full_df)[0]
+        st.markdown(
+            '<div class="section-heading">📊 Prediction Result</div>',
+            unsafe_allow_html=True
+        )
 
-    probability = model.predict_proba(full_df)[0]
 
-    diabetic = int(prediction) == 1
+        if prediction == 1:
 
-    # ---------------------------------------------------------
-    # Output
-    # ---------------------------------------------------------
-    st.divider()
+            st.markdown(
+                f"""
+                <div class="prediction-card">
 
-    if diabetic:
+                    <div class="prediction-title">
+                        ⚠️ Prediction
+                    </div>
+
+                    <div class="prediction-value">
+                        Diabetes (Class 1)
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        else:
+
+            st.markdown(
+                f"""
+                <div class="prediction-card">
+
+                    <div class="prediction-title">
+                        ✅ Prediction
+                    </div>
+
+                    <div class="prediction-value">
+                        No Diabetes (Class 0)
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+        # -------------------------------------------------
+        # PROBABILITY DISPLAY
+        # -------------------------------------------------
+
+        if probability is not None:
+
+            st.markdown(
+                "### 🎯 Predicted Diabetes Probability"
+            )
+
+            col1, col2, col3 = st.columns([1, 2, 1])
+
+            with col2:
+
+                st.metric(
+                    "Diabetes Probability",
+                    f"{probability:.2%}"
+                )
+
+                st.progress(
+                    float(probability)
+                )
+
+
+        # -------------------------------------------------
+        # INPUT SUMMARY
+        # -------------------------------------------------
+
+        st.markdown("### 📋 Entered Information")
+
+        summary_col1, summary_col2 = st.columns(2)
+
+
+        with summary_col1:
+
+            st.write(
+                f"👤 **Gender:** {gender}"
+            )
+
+            st.write(
+                f"🎂 **Age:** {age:.0f}"
+            )
+
+            st.write(
+                f"🚬 **Smoking History:** {smoking_history}"
+            )
+
+            st.write(
+                f"⚖️ **BMI:** {bmi:.2f}"
+            )
+
+
+        with summary_col2:
+
+            st.write(
+                f"🩸 **HbA1c Level:** {hba1c_level:.1f}"
+            )
+
+            st.write(
+                f"🧪 **Blood Glucose:** "
+                f"{blood_glucose_level:.0f}"
+            )
+
+            st.write(
+                f"❤️ **Hypertension:** "
+                f"{'Yes' if hypertension == 1 else 'No'}"
+            )
+
+            st.write(
+                f"❤️ **Heart Disease:** "
+                f"{'Yes' if heart_disease == 1 else 'No'}"
+            )
+
+
+        # -------------------------------------------------
+        # TECHNICAL DETAILS
+        # -------------------------------------------------
+
+        with st.expander("🔎 View Model Input Data"):
+
+            st.dataframe(
+                new_data,
+                use_container_width=True
+            )
+
+
+    except Exception as e:
 
         st.error(
-            "## ⚠️ Diabetic Prediction: Positive"
+            f"❌ Prediction failed: {e}"
         )
 
-        st.write(
-            "The patient is likely to have diabetes."
-        )
 
-        st.write(
-            f"Prediction Confidence: {max(probability)*100:.2f}%"
-        )
+# =========================================================
+# PROJECT INFORMATION
+# =========================================================
 
-    else:
+st.divider()
 
-        st.success(
-            "## ✅ Diabetic Prediction: Negative"
-        )
+st.markdown(
+    '<div class="section-heading">📚 About the Project</div>',
+    unsafe_allow_html=True
+)
 
-        st.write(
-            "The patient is unlikely to have diabetes."
-        )
+about_col1, about_col2 = st.columns(2)
 
-        st.write(
-            f"Prediction Confidence: {max(probability)*100:.2f}%"
-        )
+
+with about_col1:
+
+    st.markdown(
+        """
+        <div class="info-card">
+
+        <div class="card-title">
+        🔬 Machine Learning Workflow
+        </div>
+
+        <div class="card-text">
+
+        • Data cleaning<br>
+        • Duplicate removal<br>
+        • Train-test split<br>
+        • Data preprocessing<br>
+        • One-Hot Encoding<br>
+        • Feature scaling<br>
+        • SMOTE for class imbalance<br>
+        • Model comparison<br>
+        • Cross-validation<br>
+        • Final XGBoost model
+
+        </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+with about_col2:
+
+    st.markdown(
+        """
+        <div class="info-card">
+
+        <div class="card-title">
+        📈 Model Performance
+        </div>
+
+        <div class="card-text">
+
+        The final XGBoost model achieved:
+
+        <br><br>
+
+        <b>Accuracy:</b> 96.85%<br>
+        <b>Precision:</b> 88.27%<br>
+        <b>Recall:</b> 74.12%<br>
+        <b>F1-Score:</b> 80.58%<br>
+        <b>ROC-AUC:</b> 0.9791<br>
+        <b>PR-AUC:</b> 0.8887
+
+        </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# =========================================================
+# DISCLAIMER
+# =========================================================
+
+st.divider()
+
+st.warning(
+    """
+    ⚠️ **Important Disclaimer**
+
+    This application is an educational and portfolio
+    machine-learning demonstration. The prediction is generated
+    by a trained model and should not be considered a medical
+    diagnosis or a substitute for professional medical evaluation.
+    """
+)
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.markdown(
+    """
+    <div class="footer">
+
+    🩺 <b>Diabetes Prediction ML Project</b>
+
+    <br><br>
+
+    Developed by <b>Pylu Swapna</b> | BSc Graduate
+
+    <br>
+
+    Python • Pandas • Scikit-learn • SMOTE • XGBoost • Streamlit
+
+    </div>
+    """,
+    unsafe_allow_html=True
+)
