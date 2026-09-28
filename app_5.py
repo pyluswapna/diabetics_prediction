@@ -20,7 +20,7 @@ st.set_page_config(
 # ─────────────────────────────────────────────────────────────
 @st.cache_resource
 def load_artifacts():
-    artifacts = joblib.load("diabetic_predic_files.pkl")
+    artifacts = joblib.load("diabetic_prediction_pipeline_1.pkl")
 
     return (
         artifacts["model"],
