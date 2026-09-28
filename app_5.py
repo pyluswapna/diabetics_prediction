@@ -456,49 +456,15 @@ if submitted:
         # RESULT SECTION
         # -------------------------------------------------
 
-        st.markdown(
-            '<div class="section-heading">📊 Prediction Result</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown("### 📊 Prediction Result")
 
+if prediction == 1:
 
-        if prediction == 1:
+    st.error("🔴 DIABETES")
 
-            st.markdown(
-                f"""
-                <div class="prediction-card">
+else:
 
-                    <div class="prediction-title">
-                        ⚠️ Prediction
-                    </div>
-
-                    <div class="prediction-value">
-                        Diabetes (Class 1)
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        else:
-
-            st.markdown(
-                f"""
-                <div class="prediction-card">
-
-                    <div class="prediction-title">
-                        ✅ Prediction
-                    </div>
-
-                    <div class="prediction-value">
-                        No Diabetes (Class 0)
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    st.success("🟢 NO DIABETES")
 
 
         # -------------------------------------------------
