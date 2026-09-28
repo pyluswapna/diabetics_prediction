@@ -393,65 +393,25 @@ if submitted:
         # -------------------------------------------------
         # DIABETES RESULT
         # -------------------------------------------------
+        # =================================================
+        # PREDICTION RESULT
+        # =================================================
+
+        st.markdown("### 📊 Prediction Result")
 
         if prediction == 1:
 
-            st.markdown(
-                """
-                <div style="
-                    background-color:#ffe5e5;
-                    padding:28px;
-                    border-radius:18px;
-                    text-align:center;
-                    border:2px solid #ff4b4b;
-                ">
-
-                    <h1 style="
-                        color:#d00000;
-                        margin:0;
-                        font-size:34px;
-                    ">
-
-                        🔴 DIABETES
-
-                    </h1>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-
-        # -------------------------------------------------
-        # NO DIABETES RESULT
-        # -------------------------------------------------
+            st.error("DIABETES")
 
         else:
 
-            st.markdown(
-                """
-                <div style="
-                    background-color:#e8f7ee;
-                    padding:28px;
-                    border-radius:18px;
-                    text-align:center;
-                    border:2px solid #28a745;
-                ">
+            st.success("NO DIABETES")
+        
 
-                    <h1 style="
-                        color:#16833a;
-                        margin:0;
-                        font-size:34px;
-                    ">
 
-                        🟢 NO DIABETES
+        
 
-                    </h1>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+               
 
 
         # =================================================
